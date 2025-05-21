@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  title: Movie Ticket Booking System - API Gateway
+  description: API Gateway for the movie ticket booking system
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: API Gateway development server
+paths:
+  /api/movies:
+    get:
+      summary: Get a list of all movies
+      operationId: getMovies
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [coming_soon, now_showing, ended]
+          description: Filter movies by status
+      responses:
+        '200':
+          description: A list of movies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '500':
+          description: Server error
+  
+  /api/movies/{id}:
+    get:
+      summary: Get a movie by ID
+      operationId: getMovieById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      responses:
+        '200':
+          description: A movie object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '404':
+          description: Movie not found
+        '500':
+          description: Server error
+  
+  /api/movies/{movieId}/seats:
+    get:
+      summary: Get available seats for a movie
+      operationId: getMovieSeats
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      responses:
+        '200':
+          description: List of seats with availability status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Seat'
+        '404':
+          description: Movie not found
+        '500':
+          description: Server error
+  
+  /api/orders:
+    post:
+      summary: Create a new order (seat reservation)
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrder'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid request
+        '409':
+          description: Seats already reserved
+        '500':
+          description: Server error
+    get:
+      summary: Get user orders
+      operationId: getUserOrders
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+            format: email
+          description: Customer email
+      responses:
+        '200':
+          description: List of user orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '500':
+          description: Server error
+  
+  /api/orders/{id}:
+    get:
+      summary: Get order by ID
+      operationId: getOrderById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Order ID
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+        '500':
+          description: Server error
+    
+    patch:
+      summary: Update order status (confirm payment)
+      operationId: updateOrderStatus
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Order ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [confirmed, cancelled]
+      responses:
+        '200':
+          description: Order status updated successfully
+        '404':
+          description: Order not found
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          description: Duration in minutes
+        genre:
+          type: string
+        releaseDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [coming_soon, now_showing, ended]
+        posterUrl:
+          type: string
+        price:
+          type: number
+      required:
+        - id
+        - title
+        - duration
+        - genre
+        - releaseDate
+        - status
+        - price
+    
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+        row:
+          type: string
+        seatNumber:
+          type: integer
+        isAvailable:
+          type: boolean
+        price:
+          type: number
+      required:
+        - id
+        - row
+        - seatNumber
+        - isAvailable
+    
+    NewOrder:
+      type: object
+      properties:
+        movieId:
+          type: string
+        seats:
+          type: array
+          items:
+            type: string
+          description: Array of seat IDs
+        customerEmail:
+          type: string
+          format: email
+        customerName:
+          type: string
+        showtime:
+          type: string
+          format: date-time
+      required:
+        - movieId
+        - seats
+        - customerEmail
+        - customerName
+        - showtime
+    
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        movieId:
+          type: string
+        movieTitle:
+          type: string
+        seats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Seat'
+        customerEmail:
+          type: string
+          format: email
+        customerName:
+          type: string
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled]
+        totalPrice:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        showtime:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+          description: Time when temporary reservation expires
+      required:
+        - id
+        - movieId
+        - movieTitle
+        - seats
+        - customerEmail
+        - customerName
+        - status
+        - totalPrice
+        - createdAt
+        - showtime

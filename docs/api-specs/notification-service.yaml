@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: Movie Ticket Booking System - Notification Service API
+  description: API for managing notifications in a movie ticket booking system
+  version: 1.0.0
+servers:
+  - url: http://localhost:3002
+    description: Notification service development server
+paths:
+  /api/notifications:
+    post:
+      summary: Send a notification
+      operationId: sendNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+      responses:
+        '200':
+          description: Notification sent successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+  
+  /api/notifications/email:
+    post:
+      summary: Send an email notification
+      operationId: sendEmailNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailNotification'
+      responses:
+        '200':
+          description: Email notification sent successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+  
+  /api/notifications/tickets/{orderId}:
+    get:
+      summary: Get ticket template for an order
+      operationId: getTicketTemplate
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+          description: Order ID
+      responses:
+        '200':
+          description: Ticket template HTML
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Order not found
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [email, sms, push]
+        recipient:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        templateName:
+          type: string
+        templateData:
+          type: object
+      required:
+        - type
+        - recipient
+        - message
+    
+    EmailNotification:
+      type: object
+      properties:
+        to:
+          type: string
+          format: email
+        subject:
+          type: string
+        body:
+          type: string
+        isHtml:
+          type: boolean
+          default: false
+        templateName:
+          type: string
+        templateData:
+          type: object
+          properties:
+            customerName:
+              type: string
+            movieTitle:
+              type: string
+            showtime:
+              type: string
+              format: date-time
+            seats:
+              type: array
+              items:
+                type: string
+            totalPrice:
+              type: number
+            orderDate:
+              type: string
+              format: date-time
+            orderId:
+              type: string
+      required:
+        - to
+        - subject
+        - body

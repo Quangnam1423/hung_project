@@ -179,8 +179,8 @@ Sau khi khởi động các dịch vụ, ứng dụng web sẽ có sẵn tại `
 
 ## 📄 Tài liệu Dự án
 
--   [Phân tích và Thiết kế Hệ thống](./movie-ticket-booking-system/docs/analysis-and-design.md)
--   [Kiến trúc Hệ thống](./movie-ticket-booking-system/docs/architecture.md)
+-   [Phân tích và Thiết kế Hệ thống](./docs/analysis-and-design.md)
+-   [Kiến trúc Hệ thống](./docs/architecture.md)
 
 ## 🔗 Liên kết hữu ích
 
@@ -193,7 +193,3 @@ Sau khi khởi động các dịch vụ, ứng dụng web sẽ có sẵn tại `
 -   [Ethereal Email](https://ethereal.email/)
 
 ---
-
-*(Tùy chọn: Cân nhắc thêm các phần như "Đóng góp", "Chi tiết Giấy phép" nếu chưa có trong file LICENSE, hoặc "Tài liệu API" cụ thể nếu bạn có thông số kỹ thuật Swagger/OpenAPI.)*
-
-*(Tùy chọn: Nếu đây là một bài tập học thuật, bạn có thể muốn thêm các phần như "Chi tiết Nộp bài" hoặc "Lời cảm ơn" như trong ví dụ của bạn.)*

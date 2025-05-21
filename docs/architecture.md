@@ -14,7 +14,7 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
     *   *Vai trò chức năng*: Điều hướng yêu cầu, quản lý đặt giữ chỗ tạm thời, có thể thực hiện xác thực và tổng hợp phản hồi.
 
 -   **Movie Service**: Quản lý thông tin phim, suất chiếu, sơ đồ ghế và xử lý logic đặt vé.
-    *   *Công nghệ*: Node.js, Express.js, Cơ sở dữ liệu (ví dụ: MongoDB - cần xác nhận)
+    *   *Công nghệ*: Node.js, Express.js, MySQLMySQL
     *   *APIs*: RESTful endpoints để cung cấp thông tin phim, suất chiếu, ghế và xử lý đặt vé.
     *   *Vai trò chức năng*: Cung cấp danh sách phim, chi tiết phim, quản lý suất chiếu, kiểm tra tính khả dụng của ghế, tạo và lưu trữ đơn đặt vé, cập nhật trạng thái ghế.
 
@@ -28,7 +28,7 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
     *   *Vai trò chức năng*: Hiển thị thông tin, thu thập thông tin đầu vào từ người dùng, tương tác với API Service.
 
 -   **Cơ sở dữ liệu (Database)**: Mỗi microservice (Movie Service) có thể có cơ sở dữ liệu riêng để lưu trữ dữ liệu của mình (ví dụ: thông tin phim, đặt vé, trạng thái ghế). API Service có thể sử dụng Redis hoặc giải pháp lưu trữ trong bộ nhớ khác cho việc quản lý đặt giữ chỗ tạm thời nếu cần mở rộng.
-    *   *Công nghệ*: MongoDB (cần xác nhận), hoặc cơ sở dữ liệu quan hệ/NoSQL khác tùy theo nhu cầu của từng service.
+    *   *Công nghệ*: MySQL
 
 ## Giao tiếp giữa các Thành phần
 
@@ -52,14 +52,14 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
 
 ## Sơ đồ Kiến trúc
 
-(Sơ đồ kiến trúc tổng thể của bạn nên được đặt ở đây. Hiện tại, file `docs/assets/architecture.jpeg` đang được tham chiếu trong README.)
+Sơ đồ kiến trúc tổng thể  `../assets/architecture.jpeg` 
 
 ```mermaid
 graph TD
     User[Người dùng] -->|HTTP/WebSocket| Frontend(Frontend - Vue.js)
     Frontend -->|HTTP/WebSocket| APIGateway(API Gateway / API Service - Node.js, Express, Socket.io)
     APIGateway -->|HTTP REST| MovieService(Movie Service - Node.js, Express)
-    MovieService -->|CRUD| MovieDB[(Database Phim/Đặt vé - MongoDB?)]
+    MovieService -->|CRUD| MovieDB[(Database Phim/Đặt vé - MySQL)]
     APIGateway -->|HTTP REST (nếu cần)| NotificationService(Notifications Service - Node.js, Express)
     MovieService -->|HTTP REST / AMQP?| NotificationService
     NotificationService -->|SMTP| EmailServer[Máy chủ Email (Ethereal)]
