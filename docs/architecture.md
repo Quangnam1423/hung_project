@@ -56,6 +56,14 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
 
 ```mermaid
 graph TD;
+    User[Người dùng];
+    Frontend(Frontend - Vue.js);
+    APIGateway(API Gateway / API Service - Node.js, Express, Socket.io);
+    MovieService(Movie Service - Node.js, Express);
+    NotificationService(Notifications Service - Node.js, Express);
+    MovieDB[(Database Phim/Đặt vé - MySQL)];
+    EmailServer[Máy chủ Email (Ethereal)];
+
     subgraph Docker Environment;
         APIGateway;
         MovieService;
@@ -64,13 +72,13 @@ graph TD;
         MovieDB;
     end;
 
-    User[Người dùng] -->|HTTP/WebSocket| Frontend;
+    User -->|HTTP/WebSocket| Frontend;
     Frontend -->|HTTP/WebSocket| APIGateway;
     APIGateway -->|"HTTP REST"| MovieService;
     MovieService -->|"CRUD"| MovieDB;
     APIGateway -->|"HTTP REST (nếu cần)"| NotificationService;
     MovieService -->|"HTTP REST / AMQP?"| NotificationService;
-    NotificationService -->|"SMTP"| EmailServer[Máy chủ Email (Ethereal)];
+    NotificationService -->|"SMTP"| EmailServer;
 
     classDef service fill:#f9f,stroke:#333,stroke-width:2px;
     class APIGateway,MovieService,NotificationService,Frontend service;
