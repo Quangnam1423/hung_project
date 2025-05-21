@@ -84,35 +84,32 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
 
 ![Sơ đồ kiến trúc tổng thể](./assets/architecture.jpeg)
 
-```mermaid
-graph TD;
-    User[Người dùng]
-    Frontend(Frontend - Vue.js)
-    APIGateway(API Gateway / API Service - Node.js, Express, Socket.io)
-    MovieService(Movie Service - Node.js, Express)
-    NotificationService(Notifications Service - Node.js, Express)
-    MovieDB[(Database Phim/Đặt vé - MySQL)]
-    EmailServer[Máy chủ Email (Ethereal/SMTP)]
+**Bảng Thành phần Hệ thống**
 
-    subgraph Docker Environment
-        APIGateway
-        MovieService
-        NotificationService
-        Frontend
-        MovieDB
-    end
+| Tên Thành phần                                     | Công nghệ Chính                             | Vai trò Chính                                                        | Môi trường    |
+|----------------------------------------------------|---------------------------------------------|----------------------------------------------------------------------|---------------|
+| Người dùng (User)                                  | -                                           | Tương tác với hệ thống thông qua Frontend                             | Bên ngoài     |
+| Frontend Service                                   | Vue.js                                      | Cung cấp giao diện người dùng (UI)                                   | Docker        |
+| API Gateway / API Service                          | Node.js, Express.js, Socket.io              | Điểm vào duy nhất, định tuyến yêu cầu, quản lý WebSocket             | Docker        |
+| Movie Service                                      | Node.js, Express.js                         | Quản lý thông tin phim, suất chiếu, đặt vé                            | Docker        |
+| Notifications Service                              | Node.js, Express.js                         | Gửi thông báo (ví dụ: email xác nhận đặt vé)                         | Docker        |
+| Cơ sở dữ liệu (MovieDB)                            | MySQL                                       | Lưu trữ dữ liệu phim, đặt vé, ghế ngồi                                | Docker        |
+| Máy chủ Email (Email Server)                       | Dịch vụ SMTP (ví dụ: Ethereal)              | Gửi email                                                            | Bên ngoài     |
+| *Lưu trữ Trạng thái Tạm thời (cho API Gateway)*    | *Redis (ví dụ, nếu API Gateway mở rộng)*    | *Quản lý trạng thái WebSocket chia sẻ nếu API Gateway có nhiều instance* | *Docker/Bên ngoài* |
 
-    User -->|HTTP/WebSocket| Frontend
-    Frontend -->|HTTP/WebSocket| APIGateway
-    APIGateway -->|"HTTP REST"| MovieService
-    MovieService -->|"CRUD Operations"| MovieDB
-    APIGateway -->|"HTTP REST (nếu cần)"| NotificationService
-    MovieService -->|"HTTP REST / AMQP (tùy chọn)"| NotificationService
-    NotificationService -->|"SMTP"| EmailServer
+**Bảng Luồng Giao tiếp Chính**
 
-    classDef service fill:#f9f,stroke:#333,stroke-width:2px
-    class APIGateway,MovieService,NotificationService,Frontend service
-```
+| Từ Thành phần         | Đến Thành phần          | Giao thức / Phương thức   | Mô tả Luồng                                                                 |
+|-----------------------|-------------------------|---------------------------|-----------------------------------------------------------------------------|
+| Người dùng            | Frontend Service        | HTTP / WebSocket          | Tương tác của người dùng với giao diện (duyệt phim, chọn ghế)                |
+| Frontend Service      | API Gateway             | HTTP (REST) / WebSocket   | Gửi yêu cầu dữ liệu (phim, suất chiếu), gửi thông tin chọn ghế thời gian thực |
+| API Gateway           | Movie Service           | HTTP (REST)               | Chuyển tiếp yêu cầu xử lý logic nghiệp vụ phim và đặt vé                     |
+| Movie Service         | Cơ sở dữ liệu (MovieDB) | SQL (CRUD Operations)     | Đọc/ghi dữ liệu phim, suất chiếu, thông tin đặt vé, trạng thái ghế           |
+| API Gateway           | Notifications Service   | HTTP (REST)               | Yêu cầu gửi thông báo (nếu API Gateway điều phối trực tiếp)                  |
+| Movie Service         | Notifications Service   | HTTP (REST) / AMQP        | Yêu cầu gửi email xác nhận sau khi đặt vé thành công (AMQP là tùy chọn)      |
+| Notifications Service | Máy chủ Email           | SMTP                      | Gửi email đến người dùng                                                     |
+
+*Ghi chú: Các thành phần được đánh dấu "Docker" được dự kiến chạy trong môi trường Docker Compose như mô tả trong dự án.*
 
 *Chú thích: Sơ đồ trên là một biểu diễn đơn giản hóa của kiến trúc. `AMQP (tùy chọn)` chỉ ra khả năng sử dụng message queue (như RabbitMQ) cho giao tiếp giữa Movie Service và Notifications Service để tăng tính linh hoạt và độ tin cậy, đặc biệt nếu biến môi trường `AMQP_URL` được cấu hình.*
 
