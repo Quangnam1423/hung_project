@@ -14,7 +14,7 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
     *   *Vai trò chức năng*: Điều hướng yêu cầu, quản lý đặt giữ chỗ tạm thời, có thể thực hiện xác thực và tổng hợp phản hồi.
 
 -   **Movie Service**: Quản lý thông tin phim, suất chiếu, sơ đồ ghế và xử lý logic đặt vé.
-    *   *Công nghệ*: Node.js, Express.js, MySQLMySQL
+    *   *Công nghệ*: Node.js, Express.js, MySQL
     *   *APIs*: RESTful endpoints để cung cấp thông tin phim, suất chiếu, ghế và xử lý đặt vé.
     *   *Vai trò chức năng*: Cung cấp danh sách phim, chi tiết phim, quản lý suất chiếu, kiểm tra tính khả dụng của ghế, tạo và lưu trữ đơn đặt vé, cập nhật trạng thái ghế.
 
@@ -52,7 +52,7 @@ Luồng hoạt động chính của hệ thống cho phép người dùng duyệ
 
 ## Sơ đồ Kiến trúc
 
-Sơ đồ kiến trúc tổng thể  `../assets/architecture.jpeg` 
+![Sơ đồ kiến trúc tổng thể](./assets/architecture.jpeg)
 
 ```mermaid
 graph TD
