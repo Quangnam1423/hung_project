@@ -1,0 +1,57 @@
+{
+  "name": "vue-web-starter",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "clean": "node build/bin/clean.js",
+    "dev": "cross-env WEBPACK=dev node build/bin/server.js",
+    "dll": "npm run clean && webpack --progress --config build/webpack.dll.conf.js",
+    "build": "webpack --progress --config build/webpack.conf.js",
+    "build:all": "cross-env-shell WEBPACK=gh_pages \"npm run dll && npm run build\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "material-design-icons-iconfont": "^6.1.0",
+    "socket.io-client": "^2.3.0",
+    "vue": "^2.6.14",
+    "vue-axios": "^3.2.4",
+    "vue-router": "^3.5.2",
+    "vue-youtube-embed": "^2.2.1",
+    "vuetify": "^1.5.24"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/runtime": "^7.12.5",
+    "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "^0.28.4",
+    "express": "^4.17.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
+    "monfy": "^0.1.1",
+    "sass": "^1.32.13",
+    "resolve-url-loader": "^2.3.0",
+    "resource-hints-webpack-plugin": "^0.0.2",
+    "rimraf": "^3.0.2",
+    "sass-loader": "^7.3.1",
+    "style-loader": "^0.18.2",
+    "url-loader": "^1.0.1",
+    "vue-loader": "^13.0.2",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^3.12.0",
+    "webpack-dev-middleware": "^1.12.2",
+    "webpack-hot-middleware": "^2.18.2",
+    "webpack-module-hot-accept": "^1.0.5"
+  }
+}

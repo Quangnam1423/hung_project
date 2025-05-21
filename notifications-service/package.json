@@ -1,0 +1,17 @@
+{
+  "name": "movie-service",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "express-handlebars": "3.0.0",
+    "nodemailer": "^4.6.7",
+    "nodemailer-express-handlebars": "3.0.0"
+  }
+}
